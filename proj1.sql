@@ -89,19 +89,59 @@ AS
 CREATE VIEW q2i(namefirst, namelast, playerid, yearid)
 AS
   --SELECT 1, 1, 1, 1 -- replace this line
-  
+  SELECT
+    people.namefirst,
+    people.namelast,
+    people.playerid,
+    halloffame.yearid
+  FROM
+    people INNER JOIN halloffame
+    ON people.playerid = halloffame.playerid
+    AND halloffame.inducted = 'Y'
+  ORDER BY
+    halloffame.yearid DESC,
+    people.playerid
 ;
 
 -- Question 2ii
 CREATE VIEW q2ii(namefirst, namelast, playerid, schoolid, yearid)
 AS
-  SELECT 1, 1, 1, 1, 1 -- replace this line
+  --SELECT 1, 1, 1, 1, 1 -- replace this line
+  SELECT
+    q2i.namefirst,
+    q2i.namelast,
+    q2i.playerid,
+    schools.schoolid,
+    q2i.yearid
+  FROM
+    schools INNER JOIN (
+      q2i INNER JOIN collegeplaying
+      ON q2i.playerid = collegeplaying.playerid
+    )
+    ON schools.schoolid = collegeplaying.schoolid
+  WHERE
+    schools.schoolstate = 'CA'
+  ORDER BY
+    q2i.yearid DESC,
+    schools.schoolid,
+    q2i.playerid
 ;
 
 -- Question 2iii
 CREATE VIEW q2iii(playerid, namefirst, namelast, schoolid)
 AS
-  SELECT 1, 1, 1, 1 -- replace this line
+  --SELECT 1, 1, 1, 1 -- replace this line
+  SELECT
+    q2i.playerid,
+    q2i.namefirst,
+    q2i.namelast,
+    collegeplaying.schoolid
+  FROM
+    q2i LEFT JOIN collegeplaying
+    ON q2i.playerid = collegeplaying.playerid
+  ORDER BY
+    q2i.playerid DESC,
+    collegeplaying.schoolid   
 ;
 
 -- Question 3i
